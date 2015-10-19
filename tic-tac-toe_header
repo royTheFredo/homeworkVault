@@ -1,0 +1,65 @@
+#ifndef tic_tac_toe
+#define tic_tac_toe
+
+#include <iostream>
+#include <string>
+#include <random>
+using namespace std;
+
+class game
+{
+public:
+	char move;
+	int playerChoice;
+	int computerChoice;
+	char gameboard[9];// = { ' ' };
+	char player1Piece; //will be X
+	char player2Piece; //will be O
+	
+	//ask object to make next move
+	int game::askForMove();
+	//determine when game is over, is it a draw or did X or O win
+	//bool game::conditionOfBoard(bool);
+	bool game::conditionOfBoard();
+	//finds out if a given spot on the board is occupied, if so by which (X) or (O)
+	void game::whatIsAvailable(); //send 'playerPiece' get out 'playerPiece'
+	//constructor
+	game::game(int numberOfPlayers);
+
+	//possibly render board
+	void game::renderBoard(game);
+
+	int game::computerPlayer(char); //send O to the box chosen by rand()
+	
+
+private:
+
+
+	//tells object what opponent's next move is
+	void game::tellOpponentMove(int);
+
+	//possibly render board
+	void game::renderBoard();
+
+
+
+
+
+
+
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+#endif // !tic_tac_toe
