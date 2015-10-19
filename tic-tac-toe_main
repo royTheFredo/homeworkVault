@@ -1,0 +1,78 @@
+//
+//	p151 prob10
+//
+//
+#include <iostream>
+#include <string>
+#include <random>
+#include <time.h>
+#include "CSC307_HW2.h"
+
+using namespace std;
+
+void compVcomp()
+{
+	game warGames(2);
+	warGames.conditionOfBoard();
+	while (warGames.conditionOfBoard() != false)
+	{
+		//warGames.whatIsAvailable();
+		warGames.gameboard[warGames.computerPlayer(warGames.player1Piece)] = warGames.player1Piece;
+		warGames.conditionOfBoard();
+		warGames.gameboard[warGames.computerPlayer(warGames.player2Piece)] = warGames.player2Piece;
+
+	}
+	system("pause");
+}
+void userVcomp()
+{
+	
+	game player(1);
+	cout << "Please make your first move by choosing a" << endl;
+	cout << "box numbered from 0-9" << endl;
+	cout << "The layout is as follows:" << endl;
+	cout << "\t0 1 2" << endl;
+	cout << "\t3 4 5" << endl;
+	cout << "\t6 7 8" << endl;
+	cout << "====TIC-TAC-TOE====" << endl;
+	cout << player.conditionOfBoard() << endl;
+
+	while (player.conditionOfBoard() != false)
+	{
+		player.whatIsAvailable();
+		player.gameboard[player.askForMove()] = player.player1Piece;
+		player.conditionOfBoard();
+		player.gameboard[player.computerPlayer(player.player2Piece)] = player.player2Piece;
+
+	}
+
+	system("pause");
+}
+int main()
+{
+	int numberOfPlayers;
+	cout << "\t\tLet's play TIC-TAC-TOE!" << endl;
+	cout << endl;
+	cout << "\t\tNumber of computer players:" << endl;
+	cout << endl;
+	cout << "\t\t1: User -vs- Comp" << endl;
+	cout << endl;
+	cout << "\t\t2: Comp -vs- Comp" << endl;
+	cin >> numberOfPlayers;
+	switch (numberOfPlayers)
+	{
+		case 1:
+		{
+			userVcomp();
+			break;
+		}
+		case 2:
+		{
+			compVcomp();
+			break;
+		}
+
+	}
+	
+	return 0;
+}
