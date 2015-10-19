@@ -1,0 +1,187 @@
+#include <iostream>
+#include <string>
+#include <random>
+#include <time.h>
+#include "CSC307_HW2.h"
+using namespace std;
+
+
+
+//ask object to make next move
+int game::askForMove()
+{
+	int playerMove = 999;
+	while (playerMove == 999)
+	{
+		cout << "Please make your next move" << endl;
+		//objectName.whatIsAvailable();
+
+		cin >> playerMove;
+		if (gameboard[playerMove] == ' ')										
+		{																		
+			playerChoice = playerMove;
+			//gameboard[playerChoice] = player1Piece;
+		}
+		else
+		{
+			cout << "That is not a valid choice" << endl;
+			cout << "Please try again" << endl;
+			playerMove = 999;
+		}
+	}
+	return playerMove;
+}
+
+//tells object what opponent'snext move is
+void game::tellOpponentMove(int boxNumber)
+{
+	cout<< endl;
+	char current = gameboard[boxNumber];
+
+	cout << "Your opponent has placed an " << current << " in box " << boxNumber << endl;
+
+}
+
+//finds out if a given spot on the board is occupied, if so by which (X) or (O)
+void game::whatIsAvailable() 
+{
+	
+	for (int i = 0; i < 9; i++)
+	{
+		if (gameboard[i] == ' ')
+			cout << i << " is available" << endl;
+		else if (gameboard[i] == 'X')
+			cout << i << " is an X" << endl;
+		else if (gameboard[i] == 'O')
+			cout << i << " is an O" << endl;
+	}
+	renderBoard();
+
+}
+int game::computerPlayer(char piece) //send 'playerPiece' get out 'playerPiece'
+{
+	
+	move = ' ';
+	while (move == ' ')
+		{
+			srand(time(0)); 
+			int i = rand() % 8 + 0;
+			if (gameboard[i] == ' ')
+			{
+				computerChoice = i;
+				move = piece;
+				tellOpponentMove(computerChoice);
+			}
+		}
+	renderBoard();
+	return computerChoice;
+}
+//determine when game is over, is it a draw or did X or O win
+bool game::conditionOfBoard()
+{
+	bool theSwitch = true;
+	int k = 0;
+	int z = 0;
+	for (int j = 0; j < 9; j++)
+		if (gameboard[j] == ' ')
+			k++;
+	if (k != 9)
+	{
+		if (gameboard[0] == gameboard[1] && gameboard[1] == gameboard[2] && gameboard[0] != ' ')
+		{
+			cout << "Game Over " << gameboard[0] << " wins" << endl;
+			z++;
+			theSwitch = false;
+		}
+		else if (gameboard[3] == gameboard[4] && gameboard[4] == gameboard[5] && gameboard[3] != ' ')
+		{
+			cout << "Game Over " << gameboard[3] << " wins" << endl;
+			z++;
+			theSwitch = false;
+		}
+		else if (gameboard[6] == gameboard[7] && gameboard[7] == gameboard[8] && gameboard[6] != ' ')
+		{
+			cout << "Game Over " << gameboard[6] << " wins" << endl;
+			z++;
+			theSwitch = false;
+		}
+		else if (gameboard[0] == gameboard[3] && gameboard[3] == gameboard[6] && gameboard[0] != ' ')
+		{
+			cout << "Game Over " << gameboard[0] << " wins" << endl;
+			z++;
+			theSwitch = false;
+		}
+		else if (gameboard[1] == gameboard[4] && gameboard[4] == gameboard[7] && gameboard[1] != ' ')
+		{
+			cout << "Game Over " << gameboard[1] << " wins" << endl;
+			z++;
+			theSwitch = false;
+		}
+		else if (gameboard[2] == gameboard[5] && gameboard[5] == gameboard[8] && gameboard[2] != ' ')
+		{
+			cout << "Game Over " << gameboard[2] << " wins" << endl;
+			z++;
+			theSwitch = false;
+		}
+		else if (gameboard[0] == gameboard[4] && gameboard[4] == gameboard[8] && gameboard[0] != ' ')
+		{
+			cout << "Game Over " << gameboard[0] << " wins" << endl;
+			z++;
+			theSwitch = false;
+		}
+		else if (gameboard[6] == gameboard[4] && gameboard[4] == gameboard[2] && gameboard[6] != ' ')
+		{
+			cout << "Game Over " << gameboard[6] << " wins" << endl;
+			z++;
+			theSwitch = false;
+		}
+	}
+			if (k==0 && z==0)
+			{
+				cout << "Game Ended in Draw" << endl;
+				theSwitch = false;
+			}
+		
+	
+	return theSwitch;
+
+}
+
+//possibly render board
+void game::renderBoard()
+{
+	cout << endl;
+	cout << "\t_____" << endl;
+	cout << "\t" << gameboard[0] << "|" << gameboard[1] << "|" << gameboard[2] << endl;
+	cout << "\t_____" << endl;
+	cout << "\t" << gameboard[3] << "|" << gameboard[4] << "|" << gameboard[5] << endl;
+	cout << "\t_____" << endl;
+	cout << "\t" << gameboard[6] << "|" << gameboard[7] << "|" << gameboard[8] << endl;
+	cout << "\t_____" << endl;
+}
+
+//constructor
+game::game(int numberOfPlayers)
+{
+	
+	/*switch (numberOfPlayers)
+	{
+		case 1:
+		{*/
+			player1Piece = 'X';
+			player2Piece = 'O';
+			for (int i = 0; i < 9; i++)
+				gameboard[i] = ' ';
+			/*break;
+		}
+		case 2:
+		{
+			player2Piece = 'O';
+			for (int i = 0; i < 9; i++)
+				gameboard[i] =  ' ' ;
+			break;
+		}
+	}*/
+	
+
+}
