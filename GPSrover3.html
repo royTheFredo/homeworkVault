@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<script  type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.13/p5.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.4.13/addons/p5.dom.js"></script>
+	<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAh-zEQRktMCsu2cKb1L_ZCLEMhjX39dJY&callback=initMap">
+    <script src="jquery-3.1.1.min.js" type="text/javascript"></script>
+    <title>Geolocation</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 95%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+	var myText;		// variable for the text div you'll create
+	var socket = new WebSocket("ws://localhost:8081");
+	var connected = false;
+	var inData;
+	var lastSecond;
+	var Latitude;
+	var latDegrees;
+	var latMinutes;
+	var Longitude;
+	var lonDegrees;
+	var lonMinutes;
+	var map = null, marker = null;
+	var poly = null;
+	var travelpath = [];
+	
+      // Note: This example requires that you consent to location sharing when
+      // prompted by your browser. If you see the error "The Geolocation service
+      // failed.", it means you probably did not give permission for the browser to
+      // locate you.
+
+	  
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 31.397, lng: -089.644},
+          zoom: 6
+        });  
+		//var infoWindow = new google.maps.InfoWindow({map: map});
+		marker = new google.maps.Marker({
+		position: {lat: 31.397, lng: -089.644},
+		map: map
+		});
+		//the marker needed to be declared in the same place as the map.
+		//marker.setPosition() is called to move the marker
+		poly = new google.maps.Polyline({
+		strokeColor: '#FF0000',
+		strokeOpacity: 1.0,
+		strokeWeight: 3,
+		path: travelpath
+		});
+		poly.setMap(map);
+		
+	}//initMap
+	
+	function setup() {
+		createCanvas(400, 300);
+		socket.onopen = openSocket;
+		socket.onmessage = showData2;
+	}
+	function showData2(result2) {
+    
+	inData = result2.data.split(',');
+	Latitude = inData[0];
+	latDegrees = Latitude[1].concat(Latitude[2]);
+	latDegrees = Number(latDegrees);
+	latMinutes = Latitude[3]+Latitude[4] + Latitude[5] + Latitude[6] + Latitude[7] + Latitude[8] + Latitude[9];
+	latMinutes = Number(latMinutes)/60;
+	Latitude = latDegrees + latMinutes;
+	if(inData[1] == "S")
+		Latitude = -1 * Latitude;
+	Longitude = inData[2];
+	Longitudehem = inData[3];//had to trim off a " from the LON hemisphere
+	lonDegrees = Longitude[0].concat(Longitude[1] + Longitude[2]);
+	lonDegrees = Number(lonDegrees);
+	lonMinutes = Longitude[3]+Longitude[4]+Longitude[5]+Longitude[6]+Longitude[7]+Longitude[8]+Longitude[9];
+	lonMinutes = Number(lonMinutes)/60;
+	Longitude = lonDegrees + lonMinutes;
+	if(Longitudehem[0] == "W")
+		Longitude = -1 * Longitude;
+	background(0);
+	fill(255);
+	
+	text("Latitude value: " + Latitude + " " + inData[1], 30, 30);
+	text("Longitude value: " + Longitude + " " +Longitudehem[0], 30, 60);
+	var latLng2 = {lat: Latitude, lng: Longitude};
+		var loc2 = new google.maps.LatLng(latLng2);
+		plotstuff(loc2);
+    }
+	function plotstuff(grid){
+		travelpath = poly.getPath();
+		travelpath.push(grid);  //adds latest point to the end of the path
+		marker.setPosition(grid); //Places the marker at the latest plot point
+	}
+	function openSocket() {
+		myText.html("Socket open");
+    //socket.send("Hello server");
+		connected = true;
+	}
+	
+	
+	
+	
+	
+/*  //---------------------------------------------------------------------
+        // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Location found.');
+            map.setCenter(pos);
+          }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+          });
+        } else {
+          // Browser doesn't support Geolocation
+          handleLocationError(false, infoWindow, map.getCenter());
+        }
+      }
+
+      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+                              'Error: The Geolocation service failed.' :
+                              'Error: Your browser doesn\'t support geolocation.');
+      }*/
+    </script>
+    
+	</script>
+  </body>
+
+</html>
